@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>GullyTutor - Become a Local Expert</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <style type="text/tailwindcss">
+        @layer base {
+            :root {
+                --primary: 36, 99, 235;
+                --primary-hover: 29, 78, 216;
+            }
+        }
+        .form-input-premium {
+            @apply w-full h-16 px-5 rounded-[16px] border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 focus:ring-4 focus:ring-primary/10 focus:border-primary text-lg transition-all duration-200 outline-none;
+        }
+        .card-premium {
+            @apply bg-white dark:bg-slate-900 rounded-[24px] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800;
+        }
+        .step-transition {
+            @apply transition-all duration-300 ease-in-out;
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "premium": "16px",
+                        "xl-premium": "24px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+    <div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+        <header
+            class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200/60 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-6 md:px-20 py-4 sticky top-0 z-50">
+            <a href="index.html" class="flex items-center gap-3 text-primary">
+                <div class="size-10 flex items-center justify-center bg-primary rounded-xl shadow-lg shadow-primary/20">
+                    <span class="material-symbols-outlined text-white">school</span>
+                </div>
+                <h2
+                    class="text-slate-900 dark:text-slate-100 text-2xl font-black leading-tight tracking-tighter uppercase">
+                    GullyTutor</h2>
+            </a>
+            <div class="flex items-center gap-6">
+                <div class="hidden lg:flex items-center gap-8 mr-4">
+                    <a class="text-slate-500 dark:text-slate-400 text-sm font-semibold hover:text-primary transition-colors"
+                        href="#">Become a Partner</a>
+                    <a class="text-slate-500 dark:text-slate-400 text-sm font-semibold hover:text-primary transition-colors"
+                        href="#">Resources</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-tighter">Verified Tutor</p>
+                        <p class="text-sm font-bold">Alex Johnson</p>
+                    </div>
+                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-11 ring-2 ring-primary/20 ring-offset-2"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAqOWE6dfrKUatU81spdBsjmLnYRH9WvCXYdASa-Iw5HNSNBCbqbNmJF_UfdKgehn569MInwvqvtouvPV875CMxEpBwl_jsmjrznQwtWLKDIgFWJjtRGGfv76fOB4sro5fK2DaUYz_zbZsSkurWsNKfFsRAMepnAz4YF9nGHyZKFNAykok5omPFkdDvwhABG2BOwNvtlA6n0Tr45ZA_xFLLyzcZEHRyIiaQqTfNEGYx8XV8yc4GbQPFk6aSQxRUxin9Vlr6P9uALE0");'>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="flex-1 flex flex-col items-center py-12 px-4">
+            <div class="w-full max-w-[840px] flex flex-col gap-8">
+                <div class="card-premium p-8">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+                        <div>
+                            <div
+                                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-3">
+                                <span class="relative flex h-2 w-2">
+                                    <span
+                                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                                </span>
+                                Profile Setup
+                            </div>
+                            <h1
+                                class="text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight leading-tight">
+                                Expert Details</h1>
+                            <p class="text-slate-500 dark:text-slate-400 text-base mt-2">Help us match you with the
+                                right students in your local area.</p>
+                        </div>
+                        <div class="flex flex-col items-end gap-2">
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-4xl font-black text-primary">50</span>
+                                <span class="text-xl font-bold text-slate-400">%</span>
+                            </div>
+                            <div class="flex gap-1.5">
+                                <div class="h-1.5 w-6 rounded-full bg-primary"></div>
+                                <div class="h-1.5 w-6 rounded-full bg-primary"></div>
+                                <div class="h-1.5 w-6 rounded-full bg-slate-200 dark:bg-slate-800"></div>
+                                <div class="h-1.5 w-6 rounded-full bg-slate-200 dark:bg-slate-800"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div class="absolute top-0 left-0 h-full bg-primary rounded-full transition-all duration-700 shadow-[0_0_15px_rgba(36,99,235,0.4)]"
+                            style="width: 50%;"></div>
+                    </div>
+                    <div class="grid grid-cols-4 mt-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                        <div class="text-primary">Personal</div>
+                        <div class="text-primary text-center">Expertise</div>
+                        <div class="text-center">Rates</div>
+                        <div class="text-right">Verification</div>
+                    </div>
+                </div>
+                <div class="card-premium overflow-hidden step-transition">
+                    <div class="p-8 md:p-12">
+                        <div class="mb-10 flex items-start gap-4">
+                            <div
+                                class="size-14 rounded-2xl bg-primary/5 flex items-center justify-center flex-shrink-0 text-primary">
+                                <span class="material-symbols-outlined text-3xl">psychology</span>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Subjects &amp;
+                                    Experience</h2>
+                                <p class="text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">Showcase your
+                                    teaching strengths. Tutors with detailed experience profiles get <span
+                                        class="text-primary font-bold">3x more inquiries</span>.</p>
+                            </div>
+                        </div>
+                        <form class="space-y-10">
+                            <div class="space-y-5">
+                                <label
+                                    class="block text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-widest">Select
+                                    your expertise areas</label>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <div class="group">
+                                        <input checked="" class="peer hidden" id="math" type="checkbox" />
+                                        <label
+                                            class="flex flex-col items-center justify-center p-6 border-2 border-slate-100 dark:border-slate-800 rounded-premium cursor-pointer hover:border-primary/30 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/50 peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-md transition-all duration-300"
+                                            for="math">
+                                            <span
+                                                class="material-symbols-outlined text-3xl mb-3 text-slate-400 peer-checked:text-primary transition-colors">functions</span>
+                                            <span
+                                                class="text-sm font-bold text-slate-600 dark:text-slate-400 peer-checked:text-primary">Mathematics</span>
+                                        </label>
+                                    </div>
+                                    <div class="group">
+                                        <input checked="" class="peer hidden" id="science" type="checkbox" />
+                                        <label
+                                            class="flex flex-col items-center justify-center p-6 border-2 border-slate-100 dark:border-slate-800 rounded-premium cursor-pointer hover:border-primary/30 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/50 peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-md transition-all duration-300"
+                                            for="science">
+                                            <span
+                                                class="material-symbols-outlined text-3xl mb-3 text-slate-400 peer-checked:text-primary transition-colors">science</span>
+                                            <span
+                                                class="text-sm font-bold text-slate-600 dark:text-slate-400 peer-checked:text-primary">Science</span>
+                                        </label>
+                                    </div>
+                                    <div class="group">
+                                        <input class="peer hidden" id="english" type="checkbox" />
+                                        <label
+                                            class="flex flex-col items-center justify-center p-6 border-2 border-slate-100 dark:border-slate-800 rounded-premium cursor-pointer hover:border-primary/30 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/50 peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-md transition-all duration-300"
+                                            for="english">
+                                            <span
+                                                class="material-symbols-outlined text-3xl mb-3 text-slate-400 peer-checked:text-primary transition-colors">menu_book</span>
+                                            <span
+                                                class="text-sm font-bold text-slate-600 dark:text-slate-400 peer-checked:text-primary">English</span>
+                                        </label>
+                                    </div>
+                                    <div class="group">
+                                        <input class="peer hidden" id="history" type="checkbox" />
+                                        <label
+                                            class="flex flex-col items-center justify-center p-6 border-2 border-slate-100 dark:border-slate-800 rounded-premium cursor-pointer hover:border-primary/30 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/50 peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-md transition-all duration-300"
+                                            for="history">
+                                            <span
+                                                class="material-symbols-outlined text-3xl mb-3 text-slate-400 peer-checked:text-primary transition-colors">history_edu</span>
+                                            <span
+                                                class="text-sm font-bold text-slate-600 dark:text-slate-400 peer-checked:text-primary">History</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div class="space-y-3">
+                                    <label
+                                        class="block text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-widest">Experience
+                                        Level</label>
+                                    <select class="form-input-premium">
+                                        <option>1-2 years experience</option>
+                                        <option selected="">3-5 years experience</option>
+                                        <option>5-10 years experience</option>
+                                        <option>Professional (10+ years)</option>
+                                    </select>
+                                    <p class="text-xs text-slate-400 font-medium">Your experience helps us set your tier
+                                        level.</p>
+                                </div>
+                                <div class="space-y-3">
+                                    <label
+                                        class="block text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-widest">Preferred
+                                        Level</label>
+                                    <select class="form-input-premium">
+                                        <option>Primary School Students</option>
+                                        <option>Middle School Students</option>
+                                        <option selected="">High School Students</option>
+                                        <option>University / Undergrad</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                                <div class="space-y-3">
+                                    <label
+                                        class="block text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-widest">Hourly
+                                        Rate (₹)</label>
+                                    <div class="relative">
+                                        <span
+                                            class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 text-xl font-bold">₹</span>
+                                        <input class="form-input-premium pl-12 pr-16 font-bold" placeholder="e.g. 800"
+                                            type="number" value="800" />
+                                        <span
+                                            class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 font-bold">/hr</span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-premium border border-blue-100 dark:border-blue-800/50">
+                                    <div class="flex items-start gap-3">
+                                        <span class="material-symbols-outlined text-primary">info</span>
+                                        <div>
+                                            <p class="text-sm font-bold text-slate-800 dark:text-slate-200">Earning
+                                                Potential</p>
+                                            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+                                                In your area, Math & Science tutors charge an average of
+                                                <strong>₹1200/hr</strong>. You can adjust this anytime.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-6">
+                                <div class="flex justify-between items-end">
+                                    <div>
+                                        <label
+                                            class="block text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-widest">Travel
+                                            Radius</label>
+                                        <p class="text-xs text-slate-400 mt-1">How far are you willing to travel for
+                                            in-person sessions?</p>
+                                    </div>
+                                    <div class="bg-primary px-4 py-1 rounded-full text-white font-black text-sm">8 km
+                                    </div>
+                                </div>
+                                <div class="px-2">
+                                    <input
+                                        class="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-primary"
+                                        max="15" min="3" type="range" value="8" />
+                                    <div
+                                        class="flex justify-between mt-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                                        <span>Hyperlocal (3km)</span>
+                                        <span>Regional (15km)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <label
+                                    class="block text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-widest">Your
+                                    Teaching Philosophy</label>
+                                <textarea
+                                    class="w-full rounded-premium border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/50 focus:ring-4 focus:ring-primary/10 focus:border-primary text-lg p-6 min-h-[160px] transition-all"
+                                    placeholder="Tell parents what makes your approach unique. e.g. 'I focus on building confidence through practical problem-solving...'"></textarea>
+                                <p class="text-xs text-slate-400 text-right">0 / 500 characters</p>
+                            </div>
+                            <div
+                                class="flex flex-col sm:flex-row gap-4 pt-10 mt-10 border-t border-slate-100 dark:border-slate-800">
+                                <button
+                                    class="flex-1 h-16 rounded-premium border-2 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-black hover:bg-slate-50 dark:hover:bg-slate-800 transition-all uppercase tracking-widest text-sm"
+                                    type="button">
+                                    Previous Step
+                                </button>
+                                <button
+                                    class="flex-[2] h-16 rounded-premium bg-primary text-white font-black text-lg shadow-xl shadow-primary/30 hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 uppercase tracking-wider"
+                                    type="submit">
+                                    <span>Continue Setup</span>
+                                    <span class="material-symbols-outlined font-bold">arrow_forward</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-premium overflow-hidden border-none">
+                    <div class="p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div class="flex items-center gap-5">
+                            <div
+                                class="size-16 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                <span class="material-symbols-outlined text-primary text-4xl">my_location</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-black text-slate-900 dark:text-slate-100">Hyperlocal Coverage
+                                </h3>
+                                <p class="text-slate-500 dark:text-slate-400 mt-1">You'll be visible to <strong>240+
+                                        students</strong> within your 8km radius.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <span
+                                class="px-4 py-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-black rounded-lg uppercase tracking-wider border border-emerald-100 dark:border-emerald-800/50">High
+                                Demand Zone</span>
+                        </div>
+                    </div>
+                    <div class="h-64 w-full bg-slate-200 dark:bg-slate-800 relative group overflow-hidden">
+                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[20s] ease-linear scale-110 group-hover:scale-100"
+                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBwmEoATVHS6G0ix0Hn1LZIIowBbeTEXwSBm7X_H8b5qeEwnhkqK4SvRTRX0YJOeyptxwjtG2WU7re0vyhhnL5HxWOfczsNcpqtsg0t26umoeYfzrErvK5cWdjpunz4CkY46nHban-9Eg3qhrdYcnuv9QNq0_mGnIIgc71-M2sOnsmQQApqQpWJi5wolOtKb36IJjviep9yyqbI6BbnfIJOoZhYhmvcgCy8gUjT75Rs88qD8jb3CHvqHnNJ_TchmANYUHfc_7Jr2Ow'); opacity: 0.8;">
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="relative">
+                                <div
+                                    class="size-32 rounded-full border-2 border-primary/50 bg-primary/10 animate-pulse">
+                                </div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div
+                                        class="size-20 rounded-full border-4 border-white bg-primary shadow-2xl flex items-center justify-center">
+                                        <div class="size-4 bg-white rounded-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="absolute bottom-6 left-6 right-6 flex justify-between items-center pointer-events-none">
+                            <div
+                                class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/20 shadow-xl">
+                                <p class="text-[10px] font-black uppercase text-slate-400 tracking-tighter">Your Center
+                                </p>
+                                <p class="text-xs font-bold text-slate-900 dark:text-white">Downtown District</p>
+                            </div>
+                            <div
+                                class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/20 shadow-xl">
+                                <p class="text-[10px] font-black uppercase text-slate-400 tracking-tighter">Students
+                                    Nearby</p>
+                                <p class="text-xs font-bold text-slate-900 dark:text-white">243 active</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="flex flex-wrap items-center justify-center gap-x-12 gap-y-6 py-4 opacity-60 hover:opacity-100 transition-opacity">
+                    <div class="flex items-center gap-2 text-slate-500">
+                        <span class="material-symbols-outlined text-xl">verified_user</span>
+                        <span class="text-xs font-bold uppercase tracking-widest">Identity Protected</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-slate-500">
+                        <span class="material-symbols-outlined text-xl">payments</span>
+                        <span class="text-xs font-bold uppercase tracking-widest">Secure Payments</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-slate-500">
+                        <span class="material-symbols-outlined text-xl">stars</span>
+                        <span class="text-xs font-bold uppercase tracking-widest">Top Rated Platform</span>
+                    </div>
+                </div>
+                <footer class="mt-8 pb-20 text-center space-y-6">
+                    <div class="h-px w-24 bg-slate-200 dark:bg-slate-800 mx-auto"></div>
+                    <p class="text-slate-400 text-sm font-bold">© 2024 GullyTutor India. Empowering Local Educators.</p>
+                    <div class="flex justify-center gap-8">
+                        <a class="text-slate-400 hover:text-primary text-xs font-bold transition-colors uppercase tracking-widest"
+                            href="#">Privacy</a>
+                        <a class="text-slate-400 hover:text-primary text-xs font-bold transition-colors uppercase tracking-widest"
+                            href="#">Terms</a>
+                        <a class="text-slate-400 hover:text-primary text-xs font-bold transition-colors uppercase tracking-widest"
+                            href="#">Trust Center</a>
+                    </div>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>

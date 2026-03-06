@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Tutor Dashboard | GullyTutor</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                    },
+                    borderRadius: {
+                        "premium": "16px",
+                        "xl-premium": "24px"
+                    }
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        body { font-family: 'Outfit', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .nav-item-active { @apply bg-primary/5 text-primary border-r-4 border-primary; }
+        .sparkline-bar { @apply w-1 bg-primary/20 rounded-t-sm self-end; }
+        .sparkline-bar-active { @apply bg-primary/60; }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside
+            class="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col transition-all">
+            <div class="p-8 mb-4">
+                <a href="index.html" class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">
+                        <span class="material-symbols-outlined text-2xl font-black">school</span>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-black tracking-tight text-slate-900 dark:text-white leading-none">
+                            GullyTutor</h1>
+                        <p
+                            class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1.5 opacity-60">
+                            Professional Account</p>
+                    </div>
+                </a>
+            </div>
+
+            <nav class="flex-1 px-4 space-y-1">
+                <p
+                    class="px-4 py-2 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-4">
+                    Navigation</p>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-xl nav-item-active transition-all" href="#">
+                    <span class="material-symbols-outlined text-xl">grid_view</span>
+                    <span class="text-sm font-bold">Dashboard Home</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-50 transition-all group"
+                    href="#">
+                    <span
+                        class="material-symbols-outlined text-xl group-hover:text-primary transition-colors">forum</span>
+                    <span class="text-sm font-bold">Inquiries</span>
+                    <span
+                        class="ml-auto bg-primary/10 text-primary text-[10px] font-black px-2 py-0.5 rounded-full">New</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-50 transition-all group"
+                    href="#">
+                    <span
+                        class="material-symbols-outlined text-xl group-hover:text-primary transition-colors">account_circle</span>
+                    <span class="text-sm font-bold">Your Profile</span>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-50 transition-all group"
+                    href="#">
+                    <span
+                        class="material-symbols-outlined text-xl group-hover:text-primary transition-colors">analytics</span>
+                    <span class="text-sm font-bold">Local Analytics</span>
+                </a>
+            </nav>
+
+            <div class="p-6 mt-auto border-t border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-3 px-2">
+                    <div class="relative">
+                        <img id="tutor-img-sidebar" alt="Tutor Portrait"
+                            class="w-10 h-10 rounded-xl object-cover ring-2 ring-slate-100 dark:ring-slate-800"
+                            src="https://i.pravatar.cc/100?u=gully" />
+                        <div
+                            class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full">
+                        </div>
+                    </div>
+                    <div class="overflow-hidden">
+                        <p id="tutor-name-sidebar" class="text-sm font-black truncate text-slate-900 dark:text-white">
+                            Loading...</p>
+                        <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest">Verified Pro</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-8 lg:p-12">
+            <header class="mb-12 flex flex-wrap justify-between items-start gap-4 animate-[fadeIn_0.5s]">
+                <div class="max-w-2xl">
+                    <h2 class="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">Performance
+                        Dashboard</h2>
+                    <p class="text-slate-500 dark:text-slate-400 mt-2 text-lg font-medium">Monitoring your local reach
+                        in Dwarka, Delhi NCR radius.</p>
+                </div>
+                <div class="flex gap-3">
+                    <button
+                        class="flex items-center gap-2 px-6 py-3 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-xs font-black text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-all shadow-sm uppercase tracking-widest">
+                        <span class="material-symbols-outlined text-lg">calendar_month</span>
+                        This Month
+                    </button>
+                    <button
+                        class="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl text-xs font-black hover:brightness-110 transition-all shadow-xl shadow-primary/20 uppercase tracking-widest">
+                        <span class="material-symbols-outlined text-lg">add_circle</span>
+                        Post New Course
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div
+                    class="p-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group hover:shadow-xl transition-all">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <p
+                                class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2">
+                                Profile Exposure</p>
+                            <h3 id="total-views"
+                                class="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">0</h3>
+                        </div>
+                        <div class="p-4 bg-primary/5 text-primary rounded-2xl">
+                            <span class="material-symbols-outlined text-2xl font-black">visibility</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-emerald-500 text-xs font-black">
+                        <span class="material-symbols-outlined text-sm font-black">trending_up</span>
+                        24% More Reach
+                    </div>
+                </div>
+
+                <div
+                    class="p-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group hover:shadow-xl transition-all">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <p
+                                class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2">
+                                Student Enquiries</p>
+                            <h3 id="new-inquiries"
+                                class="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">0</h3>
+                        </div>
+                        <div class="p-4 bg-primary/5 text-primary rounded-2xl">
+                            <span class="material-symbols-outlined text-2xl font-black">chat</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-emerald-500 text-xs font-black">
+                        <span class="material-symbols-outlined text-sm font-black">check_circle</span>
+                        Verified Leads
+                    </div>
+                </div>
+
+                <div
+                    class="p-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group hover:shadow-xl transition-all">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <p
+                                class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2">
+                                Conversion Rate</p>
+                            <h3 id="conversion-rate"
+                                class="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">0%</h3>
+                        </div>
+                        <div class="p-4 bg-emerald-500/5 text-emerald-500 rounded-2xl">
+                            <span class="material-symbols-outlined text-2xl font-black">ads_click</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-emerald-500 text-xs font-black">
+                        <span class="material-symbols-outlined text-sm font-black">bolt</span>
+                        High Performance
+                    </div>
+                </div>
+
+                <div
+                    class="p-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group hover:shadow-xl transition-all">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <p
+                                class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2">
+                                Local Rating</p>
+                            <h3 id="avg-rating"
+                                class="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">0.0</h3>
+                        </div>
+                        <div class="p-4 bg-amber-500/5 text-amber-500 rounded-2xl">
+                            <span class="material-symbols-outlined text-2xl font-black">grade</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1 text-slate-400 text-[10px] font-black uppercase tracking-wider">
+                        Top 5% in your area
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inquiries Table Section -->
+            <div
+                class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden mb-20 animate-[fadeIn_0.7s]">
+                <div
+                    class="p-8 border-b border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div>
+                        <h3 class="text-xl font-black text-slate-900 dark:text-white tracking-tight leading-none mb-1">
+                            Recent Student Enquiries</h3>
+                        <p class="text-sm text-slate-400 font-medium">Manage leads and booking requests in Delhi NCR.
+                        </p>
+                    </div>
+                    <button
+                        class="px-6 py-2.5 text-xs font-black text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-slate-800 rounded-xl hover:text-primary transition-all border border-slate-100 dark:border-slate-800">View
+                        History</button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-slate-50/50 dark:bg-slate-800/30">
+                                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    Student Details</th>
+                                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    Requirements</th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-center">
+                                    Locality</th>
+                                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    Received</th>
+                                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    Status</th>
+                                <th
+                                    class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">
+                                    Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inquiries-table" class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Footer -->
+            <footer class="mt-20 py-10 border-t border-slate-100 dark:border-slate-800">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">© 2026 GullyTutor •
+                        Built for Elite Hack 1.0</p>
+                    <div class="flex gap-6">
+                        <a href="#"
+                            class="text-slate-400 hover:text-primary transition-colors text-[10px] font-black uppercase tracking-widest">Privacy</a>
+                        <a href="#"
+                            class="text-slate-400 hover:text-primary transition-colors text-[10px] font-black uppercase tracking-widest">Terms</a>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/tutors.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>
