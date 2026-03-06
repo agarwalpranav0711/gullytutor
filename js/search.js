@@ -161,7 +161,7 @@ async function triggerAIMatch(subject, budget) {
                             <span class="text-lg font-black text-primary">₹${tutor.price}</span>
                             <span class="text-[10px] font-bold text-slate-400">/hr</span>
                         </div>
-                        <a href="tutor-profile?id=${tutor.id}" class="w-full py-3 flex items-center justify-center rounded-xl bg-primary text-white text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-primary/30 hover:brightness-110 transition-all">Select Master</a>
+                        <a href="tutor-profile.html?id=${tutor.id}" class="w-full py-3 flex items-center justify-center rounded-xl bg-primary text-white text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-primary/30 hover:brightness-110 transition-all">Select Master</a>
                     </div>
                 </div>
             `;
@@ -247,7 +247,7 @@ function updateMapMarkers() {
                 <div class="font-black text-slate-900 text-sm mb-1">${tutor.name}</div>
                 <div class="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">${tutor.subject}</div>
                 <div class="text-[10px] font-bold text-slate-500 mb-3">₹${tutor.price}/hr • ${tutor.simulated_distance}km away</div>
-                <a href="tutor-profile?id=${tutor.id}" class="block w-full py-2 text-center bg-primary text-white text-[10px] font-black rounded-lg uppercase no-underline hover:brightness-110 transition-all shadow-md shadow-primary/20">View Profile</a>
+                <a href="tutor-profile.html?id=${tutor.id}" class="block w-full py-2 text-center bg-primary text-white text-[10px] font-black rounded-lg uppercase no-underline hover:brightness-110 transition-all shadow-md shadow-primary/20">View Profile</a>
             </div>
         `);
         markers.push(marker);
@@ -384,7 +384,7 @@ function createTutorCard(tutor, aiMatchIds = []) {
                     </div>
                 </div>
                 
-                <a href="tutor-profile?id=${tutor.id}" class="h-10 px-6 flex items-center justify-center rounded-xl bg-slate-900 dark:bg-slate-800 text-white text-[10px] font-black uppercase tracking-widest hover:bg-primary transition-all active:scale-95 shadow-lg shadow-black/5">
+                <a href="tutor-profile.html?id=${tutor.id}" class="h-10 px-6 flex items-center justify-center rounded-xl bg-slate-900 dark:bg-slate-800 text-white text-[10px] font-black uppercase tracking-widest hover:bg-primary transition-all active:scale-95 shadow-lg shadow-black/5">
                     View Profile
                 </a>
             </div>
