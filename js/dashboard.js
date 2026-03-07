@@ -4,15 +4,12 @@
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Page Guard: Only run on Dashboard
     const tableBody = document.getElementById('inquiries-table');
     if (!tableBody) return;
 
-    // Get tutor ID from URL or default to 1 (Demo Admin)
     const params = new URLSearchParams(window.location.search);
     const currentTutorId = parseInt(params.get('tutor_id')) || 1;
 
-    // DOM Elements
     const viewsEl = document.getElementById('total-views');
     const inquiriesCountEl = document.getElementById('new-inquiries');
     const conversionRateEl = document.getElementById('conversion-rate');
@@ -20,25 +17,48 @@ document.addEventListener('DOMContentLoaded', async () => {
     const nameSidebar = document.getElementById('tutor-name-sidebar');
     const imgSidebar = document.getElementById('tutor-img-sidebar');
 
+    // ── Init Supabase with new credentials ──
+    window.supabaseClient = supabase.createClient(
+        'https://fhjjwqmptrytnjcpulxu.supabase.co',
+        'sb_publishable_Wv2sbgbxWoNePCbOfBMyfQ_E_HS2zis'
+    );
+
+    // ── Show logged-in user's name from Supabase session ──
+    try {
+        const { data: { user } } = await window.supabaseClient.auth.getUser();
+        if (user) {
+            const firstName = user.user_metadata?.first_name || '';
+            const lastName  = user.user_metadata?.last_name  || '';
+            const fullName  = (firstName + ' ' + lastName).trim() || user.email.split('@')[0];
+            if (nameSidebar) nameSidebar.textContent = fullName;
+            if (imgSidebar) {
+                imgSidebar.src = `https://i.pravatar.cc/100?u=${encodeURIComponent(user.email)}`;
+            }
+        } else {
+            if (nameSidebar) nameSidebar.textContent = 'Not logged in';
+        }
+    } catch (e) {
+        console.warn('Could not load user session:', e);
+    }
+
     /**
      * Load all dashboard data
      */
     async function loadDashboardData() {
         try {
-            // 1. Fetch tutor details for stats
             const tutor = await window.tutorService.fetchTutorById(currentTutorId);
             let viewCount = 0;
             if (tutor) {
-                nameSidebar.textContent = tutor.name;
-                if (tutor.image_url) imgSidebar.src = tutor.image_url;
-
+                const currentName = nameSidebar?.textContent;
+                if (!currentName || currentName === 'Loading...') {
+                    if (nameSidebar) nameSidebar.textContent = tutor.name;
+                }
+                if (tutor.image_url && imgSidebar) imgSidebar.src = tutor.image_url;
                 viewCount = tutor.view_count || 0;
-                // Animate numbers for premium feel
                 animateValue(viewsEl, 0, viewCount, 1000);
-                ratingEl.textContent = tutor.rating || '0.0';
+                if (ratingEl) ratingEl.textContent = tutor.rating || '0.0';
             }
 
-            // 2. Fetch inquiries for this tutor
             const { data: inquiries, error } = await window.supabaseClient
                 .from('inquiries')
                 .select('*')
@@ -50,17 +70,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             const inquiryCount = inquiries.length;
             animateValue(inquiriesCountEl, 0, inquiryCount, 1000);
 
-            // 3. Calculate Conversion Rate: (Inquiries / Views) * 100
             const conversionRate = viewCount > 0 ? Math.round((inquiryCount / viewCount) * 100) : 0;
-            if (conversionRateEl) {
-                animateValue(conversionRateEl, 0, conversionRate, 1000, '%');
-            }
+            if (conversionRateEl) animateValue(conversionRateEl, 0, conversionRate, 1000, '%');
 
             renderInquiries(inquiries);
 
         } catch (error) {
             console.error('GullyTutor Dashboard Error:', error);
-            // Handle error state in UI
             tableBody.innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center text-red-500 font-bold bg-red-50 dark:bg-red-900/10 rounded-xl">Connection error. Check console for details.</td></tr>`;
         }
     }
@@ -129,9 +145,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }).join('');
     }
 
-    /**
-     * Helper: Animated count up effect
-     */
     function animateValue(obj, start, end, duration, suffix = '') {
         if (!obj) return;
         let startTimestamp = null;
@@ -140,34 +153,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
             const val = Math.floor(progress * (end - start) + start);
             obj.innerHTML = val.toLocaleString() + suffix;
-            if (progress < 1) {
-                window.requestAnimationFrame(step);
-            }
+            if (progress < 1) window.requestAnimationFrame(step);
         };
         window.requestAnimationFrame(step);
     }
 
-    // Load initial data
     loadDashboardData();
 
-    // ENABLE SUPABASE REALTIME
     const inquirySubscription = window.supabaseClient
         .channel('public:inquiries')
-        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'inquiries' }, payload => {
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'inquiries' }, () => {
             showToast("New Student Lead Received!");
-            loadDashboardData(); // Refresh stats and list
+            loadDashboardData();
         })
         .subscribe();
 
-    // Clean up
     window.addEventListener('beforeunload', () => {
         window.supabaseClient.removeChannel(inquirySubscription);
     });
 });
 
-/**
- * Toast Notification for Realtime
- */
 function showToast(msg) {
     const toast = document.createElement('div');
     toast.className = 'fixed bottom-10 right-10 bg-slate-900 border border-slate-800 text-white px-8 py-4 rounded-2xl shadow-2xl z-[9999] animate-[fadeIn_0.5s] flex items-center gap-3';
@@ -183,7 +188,6 @@ function showToast(msg) {
     }, 4000);
 }
 
-// Global fade-in animation for dashboard
 const style = document.createElement('style');
 style.innerHTML = `
 @keyframes fadeIn {
