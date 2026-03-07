@@ -162,7 +162,7 @@
                     <a class="text-slate-500 dark:text-slate-400 text-sm font-bold hover:text-primary transition-colors tracking-wide" href="#">Pricing</a>
                     <a class="text-slate-500 dark:text-slate-400 text-sm font-bold hover:text-primary transition-colors tracking-wide" href="dashboard.html">Dashboard</a>
                 </nav>
-                <!-- Nav buttons — swapped to logged-in state by JS if session exists -->
+                <!-- Nav buttons — swapped to logged-in state by auth.js -->
                 <div class="flex items-center gap-4" id="auth-nav-btns">
                     <button onclick="openAuthModal('login')" class="h-11 px-6 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold hover:bg-slate-200 transition-all">Log In</button>
                     <button onclick="openAuthModal('signup')" class="h-11 px-6 rounded-xl bg-primary text-white text-sm font-bold hover:brightness-110 shadow-lg shadow-primary/25 transition-all">Sign Up</button>
@@ -386,13 +386,9 @@
     </div>
     <div class="auth-toast" id="auth-toast"></div>
 
-    <!-- ── Supabase init ── -->
-    <script>
-        window.supabaseClient = supabase.createClient(
-               'https://fhjjwqmptrytnjcpulxu.supabase.co',
-               'sb_publishable_Wv2sbgbxWoNePCbOfBMyfQ_E_HS2zis'
-        );
-    </script>
+    <!-- ── Scripts (order matters) ── -->
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
 
     <script>
         // ── Search ──
@@ -403,6 +399,10 @@
             if (subject) url += `subject=${encodeURIComponent(subject)}&`;
             if (loc) url += `location=${encodeURIComponent(loc)}`;
             window.location.href = url;
+        });
+
+        document.getElementById('near-me-btn-landing')?.addEventListener('click', () => {
+            window.location.href = 'search.html?nearMe=true';
         });
 
         // ── Counters ──
@@ -444,7 +444,11 @@
         }
         function showError(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.classList.add('show'); }
         function clearError(id) { const el = document.getElementById(id); el.textContent = ''; el.classList.remove('show'); }
-        function setLoading(btnId, on) { const b = document.getElementById(btnId); b.disabled = on; }
+        function setLoading(btnId, on) {
+            const b = document.getElementById(btnId);
+            b.disabled = on;
+            if (on) b.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite"></span>';
+        }
 
         // ── LOGIN ──
         async function handleLogin() {
@@ -454,9 +458,18 @@
             if (!email || !pw) { showError('login-error', 'Please fill in all fields.'); return; }
             setLoading('login-btn', true);
             const { data, error } = await window.supabaseClient.auth.signInWithPassword({ email, password: pw });
-            setLoading('login-btn', false);
-            if (error) { showError('login-error', error.message); }
-            else { closeAuthModal(); updateNavForUser(data.user); showAuthToast('✅ Welcome back!'); }
+            if (error) {
+                document.getElementById('login-btn').disabled = false;
+                document.getElementById('login-btn').innerHTML = '<span class="material-symbols-outlined" style="font-size:18px">login</span> Log In';
+                showError('login-error', error.message);
+            } else {
+                closeAuthModal();
+                await window.authHelper.updateNav();
+                showAuthToast('✅ Welcome back!');
+                // Redirect if came from a protected page
+                const returnUrl = new URLSearchParams(window.location.search).get('return');
+                if (returnUrl) window.location.href = decodeURIComponent(returnUrl);
+            }
         }
 
         // ── SIGNUP ──
@@ -472,12 +485,16 @@
             setLoading('signup-btn', true);
             const { error } = await window.supabaseClient.auth.signUp({
                 email, password: pw,
-                options: { data: { first_name: firstName, last_name: lastName, role } }
+                options: {
+                    data: { first_name: firstName, last_name: lastName, role },
+                    emailRedirectTo: window.location.origin + '/index.html'
+                }
             });
-            setLoading('signup-btn', false);
-            if (error) { showError('signup-error', error.message); }
-            else {
-                // Hide form, show verification message
+            if (error) {
+                document.getElementById('signup-btn').disabled = false;
+                document.getElementById('signup-btn').innerHTML = '<span class="material-symbols-outlined" style="font-size:18px">person_add</span> Create Account';
+                showError('signup-error', error.message);
+            } else {
                 document.getElementById('signup-form').style.display = 'none';
                 document.getElementById('signup-success').classList.add('show');
             }
@@ -503,28 +520,21 @@
             else showAuthToast('📧 Password reset link sent to ' + email);
         }
 
-        // ── Update nav when logged in ──
-        function updateNavForUser(user) {
-            const name = user.user_metadata?.first_name || user.email.split('@')[0];
-            document.getElementById('auth-nav-btns').innerHTML = `
-                <span class="text-sm font-bold text-slate-600 dark:text-slate-300">Hi, ${name} 👋</span>
-                <button onclick="handleLogout()" class="h-11 px-6 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold hover:bg-slate-200 transition-all">Log Out</button>
-            `;
-        }
-
-        // ── LOGOUT ──
-        async function handleLogout() {
-            await window.supabaseClient.auth.signOut();
-            location.reload();
-        }
-
-        // ── Restore session on page load ──
-        window.addEventListener('DOMContentLoaded', async () => {
-            const { data: { user } } = await window.supabaseClient.auth.getUser();
-            if (user) updateNavForUser(user);
+        // ── Open modal from URL param (e.g. after redirect from protected page) ──
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const openAuth = params.get('openAuth');
+            if (openAuth === 'login' || openAuth === 'signup') {
+                openAuthModal(openAuth);
+            }
         });
 
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuthModal(); });
+
+        // Spinner keyframe
+        const spinStyle = document.createElement('style');
+        spinStyle.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+        document.head.appendChild(spinStyle);
     </script>
 </body>
 </html>
