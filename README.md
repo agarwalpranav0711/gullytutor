@@ -61,7 +61,7 @@ GullyTutor is a two-sided marketplace connecting students with verified local tu
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | HTML5, CSS3, JavaScript (ES6+) |
+| Frontend | HTML5, CSS3(Tailwind), JavaScript (ES6+,Vanila) |
 | Styling | Tailwind CSS |
 | Backend | Supabase (PostgreSQL + Auth + Realtime) |
 | Database | PostgreSQL with Row Level Security |
@@ -154,7 +154,7 @@ gullytutor/
 | Name | Role |
 |------|------|
 | Ishan Singh | Full Stack Development |
-| [Teammate] | Full Stack Development |
+| [Pranav Agarwal] | Full Stack Development |
 
 *Team of 2 — Elite Hack 1.0 — 36 hour hackathon*
 
