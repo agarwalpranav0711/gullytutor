@@ -154,7 +154,7 @@ gullytutor/
 | Name | Role |
 |------|------|
 | Ishan Singh | Full Stack Development |
-| [Pranav Agarwal] | Full Stack Development |
+| Pranav Agarwal | Full Stack Development |
 
 *Team of 2 — Elite Hack 1.0 — 36 hour hackathon*
 
