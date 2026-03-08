@@ -6,6 +6,8 @@ Vercel - https://vercel.com/ishan18190-8327s-projects/gullytutor
 
 Website Link - https://gullytutor-zeta.vercel.app/index.html 
 
+PPT - https://docs.google.com/presentation/d/19dUEytnbp0RJmY9eABndjokFMyZbnRSS/edit?usp=drive_link&ouid=109391312354285925967&rtpof=true&sd=true 
+
 # 🎓 GullyTutor
 ### India's Hyperlocal Tutor Discovery Platform
 
