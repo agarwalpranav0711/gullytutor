@@ -1,6 +1,4 @@
-Demo - https://drive.google.com/file/d/1grM62BtKWfrVFCe2iCISrdDRqMzW7ks2/view?usp=drive_link
 
-Pitch - https://drive.google.com/file/d/1qrHfcEgi1Ythpk9z8FABMuGVrsoproiT/view?usp=drive_link
 
 Vercel - https://vercel.com/ishan18190-8327s-projects/gullytutor
 
