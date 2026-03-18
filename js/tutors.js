@@ -1,214 +1,179 @@
 /**
- * GullyTutor Data Service - Handles all Supabase interactions
- * Optimized for Indian localization (Rupees, KM, CBSE/JEE/NEET tags)
+ * GullyTutor — Tutor Service
+ * All Supabase queries related to tutors.
+ * Replaces the old seed_data.js + tutors.js mock approach.
  */
 
-const tutorsTable = 'tutors';
-const inquiriesTable = 'inquiries';
-
 window.tutorService = {
-    /**
-     * Fetch tutors with optional filtering and sorting
-     */
-    async fetchTutors({ subject, minPrice, maxPrice, distance, sortBy, userLat, userLng, nearMe }) {
-        try {
-            let query = window.supabaseClient
-                .from(tutorsTable)
-                .select('*');
 
-            if (subject) {
-                query = query.ilike('subject', `%${subject}%`);
-            }
-            if (minPrice) {
-                query = query.gte('price', minPrice);
-            }
-            if (maxPrice) {
-                query = query.lte('price', maxPrice);
-            }
+  /**
+   * Fetch tutors with optional filters
+   */
+  async fetchTutors({ subject = '', minPrice = 0, maxPrice = 10000, sortBy = 'rating', distance = 10 } = {}) {
+    let query = window.supabaseClient
+      .from('tutors')
+      .select('*');
 
-            // Sorting
-            if (sortBy === 'price_low') {
-                query = query.order('price', { ascending: true });
-            } else if (sortBy === 'price_high') {
-                query = query.order('price', { ascending: false });
-            } else if (sortBy === 'experience') {
-                query = query.order('experience', { ascending: false });
-            } else {
-                query = query.order('rating', { ascending: false });
-            }
-
-            const { data, error } = await query;
-            if (error) throw error;
-
-            // Distance Calculation & Filtering
-            let processedTutors = data.map(tutor => {
-                let dist = tutor.simulated_distance || (tutor.id % 8) + 1;
-
-                if (userLat && userLng && tutor.lat && tutor.lng) {
-                    dist = this.calculateDistance(userLat, userLng, tutor.lat, tutor.lng);
-                }
-
-                return { ...tutor, simulated_distance: parseFloat(dist).toFixed(1) };
-            });
-
-            if (nearMe) {
-                processedTutors = processedTutors.filter(t => parseFloat(t.simulated_distance) <= 3);
-            } else if (distance && distance < 15) {
-                processedTutors = processedTutors.filter(t => parseFloat(t.simulated_distance) <= distance);
-            }
-
-            return processedTutors;
-
-        } catch (error) {
-            console.error('GullyTutor Fetch Error:', error);
-            return [];
-        }
-    },
-
-    /**
-     * Haversine formula to calculate distance in KM
-     */
-    calculateDistance(lat1, lon1, lat2, lon2) {
-        const R = 6371; // km
-        const dLat = (lat2 - lat1) * Math.PI / 180;
-        const dLon = (lon2 - lon1) * Math.PI / 180;
-        const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return parseFloat((R * c).toFixed(2));
-    },
-
-    /**
-     * Fetch a single tutor by ID
-     */
-    async fetchTutorById(id) {
-        if (!id) return null;
-        try {
-            const { data, error } = await window.supabaseClient
-                .from(tutorsTable)
-                .select('*')
-                .eq('id', id)
-                .single();
-
-            if (error) throw error;
-            return data;
-        } catch (error) {
-            console.error('GullyTutor FetchById Error:', error);
-            return null;
-        }
-    },
-
-    /**
-     * Increment view count (Simple Analytics)
-     */
-    async incrementTutorView(id) {
-        if (!id) return;
-        try {
-            // Attempt RPC first (for scalability)
-            const { error: rpcError } = await window.supabaseClient.rpc('increment_view_count', { tutor_id: id });
-
-            // If RPC is missing or fails, use manual update as fallback
-            if (rpcError) {
-                // Check if column exists by attempting to select it
-                const { data: tutor, error: fetchError } = await window.supabaseClient
-                    .from(tutorsTable)
-                    .select('id') // Select ID first to verify row exists
-                    .eq('id', id)
-                    .single();
-
-                if (!fetchError && tutor) {
-                    // Try to increment - this might fail if view_count is missing
-                    const { error: updateError } = await window.supabaseClient
-                        .from(tutorsTable)
-                        .update({ view_count: 0 }) // Dummy update to check column
-                        .eq('id', id);
-
-                    if (!updateError) {
-                        // If dummy update worked, do the real one
-                        // Note: For real simplicity, we could just do one update with (view_count + 1)
-                        // but Supabase client doesn't support increment directly without RPC or fetch-then-update
-                        const { data: t } = await window.supabaseClient.from(tutorsTable).select('view_count').eq('id', id).single();
-                        await window.supabaseClient.from(tutorsTable).update({ view_count: (t.view_count || 0) + 1 }).eq('id', id);
-                    }
-                }
-            }
-        } catch (e) {
-            // Silently fail for analytics if DB column hasn't updated yet
-        }
-    },
-
-    /**
-     * Submit a student inquiry
-     */
-    async submitInquiry(inquiryData) {
-        try {
-            const { data, error } = await window.supabaseClient
-                .from(inquiriesTable)
-                .insert([inquiryData]);
-
-            if (error) throw error;
-            return data;
-        } catch (error) {
-            console.error('GullyTutor Inquiry Error:', error);
-            throw error;
-        }
-    },
-
-    /**
-     * AI Recommendation Algorithm
-     * score = rating * 2 + experience * 1 + distance_weight + price_affordability
-     */
-    async getAIRecommendations(subject, budget) {
-        try {
-            const tutors = await this.fetchTutors({ subject });
-            if (!tutors || tutors.length === 0) return [];
-
-            const scoredTutors = tutors.map(tutor => {
-                const ratingScore = (tutor.rating || 0) * 2;
-                const experienceScore = Math.min((tutor.experience || 0), 10);
-
-                // Simulating distance for score
-                const dist = tutor.simulated_distance || ((tutor.id % 8) + 1);
-                const distanceScore = Math.max(0, 10 - dist); // Higher score for closer tutors
-
-                // Price affordability (Higher score if well within budget)
-                let priceScore = 0;
-                if (budget) {
-                    const diff = budget - tutor.price;
-                    priceScore = diff > 0 ? Math.min(dist * 0.5, 5) : -5;
-                } else {
-                    priceScore = Math.max(0, (2000 - tutor.price) / 200);
-                }
-
-                const totalScore = ratingScore + experienceScore + distanceScore + priceScore;
-
-                return {
-                    ...tutor,
-                    ai_score: totalScore.toFixed(1)
-                };
-            });
-
-            // Sort by score and take top 3
-            return scoredTutors.sort((a, b) => b.ai_score - a.ai_score).slice(0, 3);
-        } catch (e) {
-            console.error('AI Match Error:', e);
-            return [];
-        }
-    },
-
-    /**
-     * Demo Mode Check
-     */
-    async ensureDemoData() {
-        const { count, error } = await window.supabaseClient
-            .from(tutorsTable)
-            .select('*', { count: 'exact', head: true });
-
-        if (!error && count === 0) {
-            return false;
-        }
-        return true;
+    if (subject && subject.trim() !== '') {
+      query = query.ilike('subject', `%${subject.trim()}%`);
     }
+
+    if (minPrice > 0) query = query.gte('price', minPrice);
+    if (maxPrice < 10000) query = query.lte('price', maxPrice);
+
+    if (sortBy === 'rating')      query = query.order('rating',     { ascending: false });
+    else if (sortBy === 'price_asc')  query = query.order('price', { ascending: true });
+    else if (sortBy === 'price_desc') query = query.order('price', { ascending: false });
+    else if (sortBy === 'experience') query = query.order('experience', { ascending: false });
+    else                              query = query.order('rating',     { ascending: false });
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('fetchTutors error:', error.message);
+      return [];
+    }
+
+    // Simulate distance (replace with real geo query if you add PostGIS)
+    return (data || []).map(t => ({
+      ...t,
+      simulated_distance: parseFloat((Math.random() * 8 + 0.5).toFixed(1))
+    }));
+  },
+
+  /**
+   * Fetch a single tutor by ID and increment view count
+   */
+  async fetchTutorById(id) {
+    const { data, error } = await window.supabaseClient
+      .from('tutors')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      console.error('fetchTutorById error:', error.message);
+      return null;
+    }
+
+    // Increment view count (fire and forget)
+    window.supabaseClient
+      .from('tutors')
+      .update({ view_count: (data.view_count || 0) + 1 })
+      .eq('id', id)
+      .then(() => {});
+
+    return data;
+  },
+
+  /**
+   * Fetch top-rated tutors for a subject (used by AI match widget)
+   */
+  async getAIRecommendations(subject, maxBudget = 10000) {
+    if (!subject || subject.trim() === '') return [];
+
+    const { data, error } = await window.supabaseClient
+      .from('tutors')
+      .select('*')
+      .ilike('subject', `%${subject.trim()}%`)
+      .lte('price', maxBudget)
+      .order('rating', { ascending: false })
+      .limit(3);
+
+    if (error) {
+      console.error('getAIRecommendations error:', error.message);
+      return [];
+    }
+    return data || [];
+  },
+
+  /**
+   * Fetch reviews for a tutor
+   */
+  async fetchReviews(tutorId) {
+    const { data, error } = await window.supabaseClient
+      .from('reviews')
+      .select('*, profiles(first_name, last_name, avatar_url)')
+      .eq('tutor_id', tutorId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('fetchReviews error:', error.message);
+      return [];
+    }
+    return data || [];
+  },
+
+  /**
+   * Submit a student inquiry to a tutor
+   */
+  async submitInquiry({ tutorId, studentName, studentEmail, message }) {
+    const { data: { user } } = await window.supabaseClient.auth.getUser();
+
+    const { error } = await window.supabaseClient
+      .from('inquiries')
+      .insert({
+        tutor_id:      tutorId,
+        student_id:    user?.id || null,
+        student_name:  studentName,
+        student_email: studentEmail,
+        message:       message,
+        status:        'new'
+      });
+
+    if (error) throw error;
+    return true;
+  },
+
+  /**
+   * Submit a review for a tutor
+   */
+  async submitReview({ tutorId, rating, comment }) {
+    const { data: { user } } = await window.supabaseClient.auth.getUser();
+    if (!user) throw new Error('You must be logged in to leave a review.');
+
+    const { error } = await window.supabaseClient
+      .from('reviews')
+      .insert({
+        tutor_id:   tutorId,
+        student_id: user.id,
+        rating:     rating,
+        comment:    comment
+      });
+
+    if (error) throw error;
+
+    // Recalculate average rating
+    const { data: reviews } = await window.supabaseClient
+      .from('reviews')
+      .select('rating')
+      .eq('tutor_id', tutorId);
+
+    if (reviews && reviews.length > 0) {
+      const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+      await window.supabaseClient
+        .from('tutors')
+        .update({ rating: parseFloat(avg.toFixed(1)) })
+        .eq('id', tutorId);
+    }
+
+    return true;
+  },
+
+  /**
+   * Register or update a tutor profile
+   */
+  async upsertTutorProfile(tutorData) {
+    const { data: { user } } = await window.supabaseClient.auth.getUser();
+    if (!user) throw new Error('Not logged in');
+
+    const { data, error } = await window.supabaseClient
+      .from('tutors')
+      .upsert({ ...tutorData, user_id: user.id }, { onConflict: 'user_id' })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
 };
